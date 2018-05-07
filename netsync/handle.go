@@ -9,13 +9,14 @@ import (
 	cmn "github.com/tendermint/tmlibs/common"
 	dbm "github.com/tendermint/tmlibs/db"
 
+	"net"
+	"time"
+
 	cfg "github.com/bytom/config"
 	"github.com/bytom/p2p"
 	core "github.com/bytom/protocol"
 	"github.com/bytom/protocol/bc"
 	"github.com/bytom/version"
-	"net"
-	"time"
 )
 
 //SyncManager Sync Manager is responsible for the business layer information synchronization
@@ -136,7 +137,7 @@ func (sm *SyncManager) netStart() error {
 		conn, err := net.DialTimeout("tcp", sm.NodeInfo().ListenAddr, 3*time.Second)
 
 		if err != nil && conn == nil {
-			log.Info("Could not open listen port")
+			log.Error("Could not open listen port")
 		}
 
 		if err == nil && conn != nil {
@@ -154,7 +155,7 @@ func (sm *SyncManager) netStart() error {
 			return err
 		}
 	}
-
+	log.WithField("nodeInfo", sm.sw.NodeInfo()).Info("net start")
 	return nil
 }
 
