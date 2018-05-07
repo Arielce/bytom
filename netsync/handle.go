@@ -134,7 +134,9 @@ func (sm *SyncManager) netStart() error {
 	}
 	//sm.sw.NodeInfo()
 	if !sm.mapResult {
-		conn, err := net.DialTimeout("tcp", sm.NodeInfo().ListenAddr, 3*time.Second)
+		p2pListener := sm.sw.Listeners()[0]
+		ListenAddr := cmn.Fmt("%v:%v", p2pListener.ExternalAddress().IP.String(), p2pListener.ExternalAddress().Port)
+		conn, err := net.DialTimeout("tcp", ListenAddr, 3*time.Second)
 
 		if err != nil && conn == nil {
 			log.Error("Could not open listen port")
